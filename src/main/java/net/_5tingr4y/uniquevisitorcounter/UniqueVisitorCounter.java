@@ -7,15 +7,12 @@ import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.filter.Getter;
 import org.spongepowered.api.event.game.state.GameInitializationEvent;
-import org.spongepowered.api.event.game.state.GameStartedServerEvent;
 import org.spongepowered.api.event.game.state.GameStartingServerEvent;
 import org.spongepowered.api.event.network.ClientConnectionEvent;
 import org.spongepowered.api.plugin.Plugin;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.text.format.TextStyles;
-
-import java.util.Optional;
 
 @Plugin(
         id = "uniquevisitorcounter",
@@ -30,11 +27,24 @@ public class UniqueVisitorCounter {
     @Inject
     private Logger logger;
 
+    private VisitorManager visitorManager;
 
     public UniqueVisitorCounter() {
         instance = this;
     }
 
+
+    //getters
+    public Logger getLogger() {
+        return logger;
+    }
+
+    public VisitorManager getVisitorManager() {
+        return visitorManager;
+    }
+
+
+    //listeners
     @Listener
     public void onInitialization(GameInitializationEvent event) {
         //TODO: load config
@@ -46,6 +56,11 @@ public class UniqueVisitorCounter {
         logger.info("Server starting, initializing UVC commands");
 
         CommandInitializer.initCommands();
+
+        logger.info("Initializing visitor manager");
+
+        visitorManager = new VisitorManager();
+        visitorManager.sync();
     }
 
 
