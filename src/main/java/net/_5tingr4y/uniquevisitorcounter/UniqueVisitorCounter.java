@@ -1,16 +1,21 @@
 package net._5tingr4y.uniquevisitorcounter;
 
 import com.google.inject.Inject;
+import net._5tingr4y.uniquevisitorcounter.commands.CommandInitializer;
 import org.slf4j.Logger;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.filter.Getter;
+import org.spongepowered.api.event.game.state.GameInitializationEvent;
 import org.spongepowered.api.event.game.state.GameStartedServerEvent;
+import org.spongepowered.api.event.game.state.GameStartingServerEvent;
 import org.spongepowered.api.event.network.ClientConnectionEvent;
 import org.spongepowered.api.plugin.Plugin;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.text.format.TextStyles;
+
+import java.util.Optional;
 
 @Plugin(
         id = "uniquevisitorcounter",
@@ -26,12 +31,21 @@ public class UniqueVisitorCounter {
     private Logger logger;
 
 
+    public UniqueVisitorCounter() {
+        instance = this;
+    }
+
     @Listener
-    public void onServerStart(GameStartedServerEvent event) {
-        // Hey! The server has started!
-        this.logger.info("Hello world!");
-        // Try loading some configuration settings for a welcome message to players
-        // when they join!
+    public void onInitialization(GameInitializationEvent event) {
+        //TODO: load config
+    }
+
+
+    @Listener
+    public void onServerStart(GameStartingServerEvent event) {
+        logger.info("Server starting, initializing UVC commands");
+
+        CommandInitializer.initCommands();
     }
 
 
@@ -41,4 +55,11 @@ public class UniqueVisitorCounter {
         player.sendMessage(Text.of(TextColors.AQUA, TextStyles.BOLD, "Hi " + player.getName()));
     }
 
+
+    //static
+    private static UniqueVisitorCounter instance;
+
+    public static UniqueVisitorCounter get() {
+        return instance;
+    }
 }
