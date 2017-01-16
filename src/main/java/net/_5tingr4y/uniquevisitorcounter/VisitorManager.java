@@ -7,7 +7,11 @@
 package net._5tingr4y.uniquevisitorcounter;
 
 import org.spongepowered.api.Sponge;
+import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.entity.living.player.User;
+import org.spongepowered.api.event.Listener;
+import org.spongepowered.api.event.filter.Getter;
+import org.spongepowered.api.event.network.ClientConnectionEvent;
 import org.spongepowered.api.profile.GameProfile;
 import org.spongepowered.api.service.user.UserStorageService;
 
@@ -45,6 +49,8 @@ public class VisitorManager {
     public boolean sync() {
         UniqueVisitorCounter.get().getLogger().info("Synchronizing...");
 
+        if(!edited) return true;
+
         if(userStorageAvailable) {
             users.clear();
 
@@ -55,8 +61,15 @@ public class VisitorManager {
                     users.add(op.get());
             }
 
+            edited = false;
             return true;
         }
         return false;
+    }
+
+    //listeners
+    @Listener
+    public void onPlayerJoin(ClientConnectionEvent.Join event, @Getter("getTargetEntity") Player player) {
+        edited = users.add(player) || edited;
     }
 }

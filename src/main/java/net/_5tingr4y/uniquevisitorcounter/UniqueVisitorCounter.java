@@ -9,6 +9,7 @@ package net._5tingr4y.uniquevisitorcounter;
 import com.google.inject.Inject;
 import net._5tingr4y.uniquevisitorcounter.commands.CommandInitializer;
 import org.slf4j.Logger;
+import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.filter.Getter;
@@ -65,15 +66,13 @@ public class UniqueVisitorCounter {
 
         logger.info("Initializing visitor manager");
 
+        if(visitorManager != null)
+            Sponge.getEventManager().unregisterListeners(visitorManager);
+
         visitorManager = new VisitorManager();
         visitorManager.sync();
-    }
 
-
-    @Listener
-    public void onPlayerJoin(ClientConnectionEvent.Join event, @Getter("getTargetEntity") Player player) {
-        // The text message could be configurable, check the docs on how to do so!
-        player.sendMessage(Text.of(TextColors.AQUA, TextStyles.BOLD, "Hi " + player.getName()));
+        Sponge.getEventManager().registerListeners(this, visitorManager);
     }
 
 
