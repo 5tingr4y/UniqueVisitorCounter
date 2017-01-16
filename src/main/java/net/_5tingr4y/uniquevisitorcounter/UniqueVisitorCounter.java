@@ -1,3 +1,9 @@
+/*
+ * Copyright (c) 2017 Raymond Kampmann <https://5tingr4y.net/>
+ *
+ * This file is part of UniqueVisitorCounter, licensed under the MIT License (MIT). See the LICENSE.txt file
+ * at the root of this project for more details.
+ */
 package net._5tingr4y.uniquevisitorcounter;
 
 import com.google.inject.Inject;
