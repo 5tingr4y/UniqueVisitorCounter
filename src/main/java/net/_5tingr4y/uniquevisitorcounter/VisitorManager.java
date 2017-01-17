@@ -46,10 +46,12 @@ public class VisitorManager {
     }
 
     //setters
-    public boolean sync() {
-        UniqueVisitorCounter.get().getLogger().info("Synchronizing...");
+    //-1=error, 0=no change, 1=success
+    public int sync(boolean force) {
+        UniqueVisitorCounter.get().getLogger().info("Synchronizing" + (force ? " forced" : ""));
 
-        if(!edited) return true;
+        //if synching is not enforced and the list is not edited, we don't synchronize
+        if(!(edited || force)) return 0;
 
         if(userStorageAvailable) {
             users.clear();
@@ -62,9 +64,9 @@ public class VisitorManager {
             }
 
             edited = false;
-            return true;
+            return 1;
         }
-        return false;
+        return -1;
     }
 
     //listeners

@@ -70,7 +70,7 @@ public class UniqueVisitorCounter {
             Sponge.getEventManager().unregisterListeners(visitorManager);
 
         visitorManager = new VisitorManager();
-        visitorManager.sync();
+        visitorManager.sync(true);
 
         Sponge.getEventManager().registerListeners(this, visitorManager);
     }

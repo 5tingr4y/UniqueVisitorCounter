@@ -8,6 +8,7 @@ package net._5tingr4y.uniquevisitorcounter.commands;
 
 import net._5tingr4y.uniquevisitorcounter.UniqueVisitorCounter;
 import org.spongepowered.api.Sponge;
+import org.spongepowered.api.command.args.GenericArguments;
 import org.spongepowered.api.command.spec.CommandSpec;
 import org.spongepowered.api.text.Text;
 
@@ -18,6 +19,7 @@ public class CommandInitializer {
         CommandSpec sync = CommandSpec.builder()
                 .description(Text.of("Synchronizes the internal visitor list with Minecraft's player list"))
                 .permission("uvc.commands.sync")
+                .arguments(GenericArguments.flags().flag("f").buildWith(GenericArguments.none()))
                 .executor(new CmdSync())
                 .build();
 

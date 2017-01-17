@@ -14,6 +14,7 @@ import org.spongepowered.api.command.args.CommandContext;
 import org.spongepowered.api.command.spec.CommandExecutor;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
+import org.spongepowered.api.text.format.TextStyles;
 
 import javax.annotation.Nonnull;
 
@@ -22,12 +23,21 @@ class CmdSync implements CommandExecutor {
     @Override
     @Nonnull
     public CommandResult execute(@Nonnull CommandSource src, @Nonnull CommandContext args) throws CommandException {
-        if(UniqueVisitorCounter.get().getVisitorManager().sync()) {
-            src.sendMessage(Text.of(TextColors.GREEN, "Internal visitor counter successfully synchronized."));
-            return CommandResult.success();
+        int res = UniqueVisitorCounter.get().getVisitorManager().sync(args.hasAny("f"));
+
+        switch(res) {
+            case 0:
+                src.sendMessage(Text.of(TextColors.GREEN, "Internal visitor counter was already synchronized."));
+                src.sendMessage(Text.of(TextColors.GREEN, "You can enforce synchronization by calling ",
+                        TextStyles.ITALIC, "/uvc sync -f"));
+                return CommandResult.success();
+            case 1:
+                src.sendMessage(Text.of(TextColors.GREEN, "Internal visitor counter successfully synchronized."));
+                return CommandResult.success();
+            default:
+                src.sendMessage(Text.of(TextColors.RED, "Unable to synchronize visitor counter; please try again in a few minutes."));
+                src.sendMessage(Text.of(TextColors.RED, "If this problem persists, try restarting the server."));
+                return CommandResult.empty();
         }
-        src.sendMessage(Text.of(TextColors.RED, "Unable to synchronize visitor counter; please try again in a few minutes."));
-        src.sendMessage(Text.of(TextColors.RED, "If this problem persists, try restarting the server."));
-        return CommandResult.empty();
     }
 }
